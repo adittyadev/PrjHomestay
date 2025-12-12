@@ -41,15 +41,15 @@
                 -
             @endif
         </td>
-        <td>
-            <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-warning btn-sm">Edit</a>
+           </td>
+            <td>
+                <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-sm btn-warning">Edit</a>
 
-            <form action="{{ route('rooms.destroy', $room->id) }}" method="POST" style="display:inline-block">
-                @csrf
-                @method('DELETE')
-                <button class="btn btn-danger btn-sm" onclick="return confirm('Hapus kamar ini?')">Hapus</button>
-            </form>
-        </td>
+                <form action="{{ route('rooms.destroy', $room->id) }}" method="POST" class="d-inline">
+                    @csrf @method('DELETE')
+                    <button onclick="return confirm('Hapus kamar?')" class="btn btn-sm btn-danger">Hapus</button>
+                </form>
+            </td>
     </tr>
     @endforeach
 </table>

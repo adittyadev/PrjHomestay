@@ -19,7 +19,14 @@ return new class extends Migration
             $table->date('check_in');
             $table->date('check_out');
             $table->integer('total_bayar');
-            $table->enum('status_booking', ['pending', 'selesai', 'batal'])->default('pending');
+            $table->enum('status_booking', [
+                'pending',
+                'booked',
+                'checkin',
+                'checkout',
+                'selesai',
+                'cancelled'
+            ])->default('pending');
             $table->timestamps();
         });
     }
