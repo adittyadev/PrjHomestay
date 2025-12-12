@@ -3,53 +3,63 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Models\Tamu;
+use App\Models\tamu;
 use Illuminate\Http\Request;
 
-class TamuController extends Controller
+class tamuController extends Controller
 {
     public function index()
     {
-        $data = Tamu::orderBy('id', 'DESC')->get();
-        return view('tamu.index', compact('data'));
+        $tamus = tamu::all();
+        return view('admin.tamu.index', compact('tamus'));
     }
 
     public function create()
     {
-        return view('tamu.create');
+        return view('admin.tamu.create');
     }
 
     public function store(Request $r)
     {
         $r->validate([
             'nama' => 'required',
-            'email' => 'required|email|unique:tamu,email',
-            'no_hp' => 'required'
+            'email' => 'required|unique:tamus',
+            'no_hp' => 'required',
+            'alamat' => 'required',
         ]);
 
-        Tamu::create($r->all());
+        tamu::create($r->all());
 
-        return redirect()->route('tamu.index')->with('success', 'Data tamu berhasil ditambahkan!');
+        return redirect()->route('admin.tamu.index')->with('success', 'Tamu berhasil ditambahkan!');
     }
 
     public function edit($id)
     {
-        $data = Tamu::findOrFail($id);
-        return view('tamu.edit', compact('data'));
+        $tamu = tamu::findOrFail($id);
+        return view('admin.tamu.edit', compact('tamu'));
     }
 
     public function update(Request $r, $id)
     {
-        $data = Tamu::findOrFail($id);
+        $tamu = tamu::findOrFail($id);
 
-        $data->update($r->all());
+        $r->validate([
+            'nama' => 'required',
+            'email' => 'required|unique:tamus,email,' . $tamu->id,
+            'no_hp' => 'required',
+            'alamat' => 'required',
+        ]);
 
-        return redirect()->route('tamu.index')->with('success', 'Data tamu berhasil diperbarui!');
+        $tamu->update($r->all());
+
+        return redirect()->route('admin.tamu.index')->with('success', 'Tamu berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
-        Tamu::destroy($id);
-        return back()->with('success', 'Data tamu berhasil dihapus');
+        $tamu = tamu::findOrFail($id);
+        $tamu->delete();
+
+        return back()->with('success', 'Tamu berhasil dihapus!');
     }
 }

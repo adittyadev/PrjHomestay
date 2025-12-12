@@ -299,7 +299,8 @@ return [
     */
 
     'menu' => [
-        // Navbar items:
+
+        // Navbar items
         [
             'type' => 'navbar-search',
             'text' => 'search',
@@ -310,27 +311,68 @@ return [
             'topnav_right' => true,
         ],
 
-        // Sidebar items:
+        // Sidebar Search
         [
             'type' => 'sidebar-menu-search',
             'text' => 'search',
         ],
         [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
+            'text' => 'Dashboard',
+            'url'  => 'admin/dashboard',
+            'icon' => 'fas fa-tachometer-alt',
         ],
+
+        // ===============================
+        // 📌 MASTER DATA
+        // ===============================
+        ['header' => 'MASTER DATA'],
+
         [
             'text' => 'Data Tamu',
-            'url'  => 'tamu',
+            'url'  => 'admin/tamu',
             'icon' => 'fas fa-user-friends',
         ],
+
         [
             'text' => 'Data Kamar',
-            'url'  => 'rooms',
+            'url'  => 'admin/rooms',
             'icon' => 'fas fa-bed',
         ],
+
+        // ===============================
+        // 📌 TRANSAKSI
+        // ===============================
+        ['header' => 'TRANSAKSI'],
+
+        [
+            'text' => 'Data Booking',
+            'url'  => 'admin/bookings',
+            'icon' => 'fas fa-calendar-check',
+        ],
+
+        [
+            'text' => 'Payments',
+            'url'  => 'admin/payments',
+            'icon' => 'fas fa-money-bill-wave',
+        ],
+
+        [
+            'text' => 'Check-in',
+            'url'  => 'admin/checkin',
+            'icon' => 'fas fa-sign-in-alt',
+        ],
+
+        [
+            'text' => 'Check-out',
+            'url'  => 'admin/checkout',
+            'icon' => 'fas fa-sign-out-alt',
+        ],
+
+        // ===============================
+        // 📌 DEFAULT ADMINLTE
+        // ===============================
         ['header' => 'account_settings'],
+
         [
             'text' => 'profile',
             'url' => 'admin/settings',
@@ -341,44 +383,8 @@ return [
             'url' => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
         ],
-        [
-            'text' => 'multilevel',
-            'icon' => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                        ],
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-            ],
-        ],
+
+        // Labels section
         ['header' => 'labels'],
         [
             'text' => 'important',
@@ -396,6 +402,7 @@ return [
             'url' => '#',
         ],
     ],
+
 
     /*
     |--------------------------------------------------------------------------

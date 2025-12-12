@@ -31,7 +31,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($data as $t)
+                @foreach($tamus as $t)
                 <tr>
                     <td>{{ $t->id }}</td>
                     <td>{{ $t->nama }}</td>

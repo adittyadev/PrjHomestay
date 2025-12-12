@@ -10,13 +10,13 @@ class RoomController extends Controller
 {
     public function index()
     {
-        $rooms = Room::all();
-        return view('rooms.index', compact('rooms'));
+        $rooms = Room::orderBy('id', 'DESC')->get();
+        return view('admin.rooms.index', compact('rooms'));
     }
 
     public function create()
     {
-        return view('rooms.create');
+        return view('admin.rooms.create');
     }
 
     public function store(Request $r)
@@ -29,7 +29,6 @@ class RoomController extends Controller
             'foto' => 'image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        // Upload foto pakai storage (public disk)
         $filename = null;
 
         if ($r->hasFile('foto')) {
@@ -38,19 +37,19 @@ class RoomController extends Controller
 
         Room::create([
             'nama_kamar' => $r->nama_kamar,
-            'kapasitas' => $r->kapasitas,
-            'harga' => $r->harga,
-            'status' => $r->status,
-            'foto' => $filename
+            'kapasitas'   => $r->kapasitas,
+            'harga'       => $r->harga,
+            'status'      => $r->status,
+            'foto'        => $filename
         ]);
 
-        return redirect()->route('rooms.index')->with('success', 'Data kamar berhasil ditambahkan!');
+        return redirect()->route('admin.rooms.index')->with('success', 'Kamar berhasil ditambahkan!');
     }
 
     public function edit($id)
     {
         $room = Room::findOrFail($id);
-        return view('rooms.edit', compact('room'));
+        return view('admin.rooms.edit', compact('room'));
     }
 
     public function update(Request $r, $id)
@@ -80,13 +79,13 @@ class RoomController extends Controller
 
         $room->update([
             'nama_kamar' => $r->nama_kamar,
-            'kapasitas' => $r->kapasitas,
-            'harga' => $r->harga,
-            'status' => $r->status,
-            'foto' => $filename
+            'kapasitas'  => $r->kapasitas,
+            'harga'      => $r->harga,
+            'status'     => $r->status,
+            'foto'       => $filename
         ]);
 
-        return redirect()->route('rooms.index')->with('success', 'Data kamar berhasil diperbarui!');
+        return redirect()->route('admin.rooms.index')->with('success', 'Kamar berhasil diperbarui!');
     }
 
     public function destroy($id)
@@ -99,6 +98,6 @@ class RoomController extends Controller
 
         $room->delete();
 
-        return back()->with('success', 'Data kamar berhasil dihapus');
+        return back()->with('success', 'Kamar berhasil dihapus!');
     }
 }

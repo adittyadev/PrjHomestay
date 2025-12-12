@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Booking extends Model
 {
     protected $fillable = [
-        'guest_id',
+        'tamu_id',
         'room_id',
         'tanggal_booking',
         'check_in',
@@ -24,5 +24,9 @@ class Booking extends Model
     public function room()
     {
         return $this->belongsTo(Room::class);
+    }
+    public function checkout()
+    {
+        return $this->hasOne(Checkout::class);
     }
 }
