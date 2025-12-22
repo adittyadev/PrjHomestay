@@ -9,14 +9,16 @@ use App\Http\Controllers\Web\BookingController;
 use App\Http\Controllers\Web\PaymentController;
 use App\Http\Controllers\Web\CheckinController;
 use App\Http\Controllers\Web\CheckoutController;
+use App\Http\Controllers\Web\AdminDashboardController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
-use App\Http\Controllers\Web\UserRoomController;
-use App\Http\Controllers\Web\UserBookingController;
-use App\Http\Controllers\Web\UserPaymentController;
-use App\Http\Controllers\Web\AdminDashboardController;
+use App\Http\Controllers\User\UserDashboardController;
+use App\Http\Controllers\User\BookingController as UserBookingController;
+use App\Http\Controllers\User\PaymentController as UserPaymentController;
+use App\Http\Controllers\User\ProfileController;
+
 
 
 /*
@@ -113,31 +115,31 @@ Route::prefix('admin')->group(function () {
 
 Route::prefix('user')->group(function () {
 
-    Route::get('/dashboard', function () {
-
-        if (!Auth::check() || Auth::user()->role !== 'user') {
-            return redirect('/login')->with('error', 'Akses ditolak!');
-        }
-
-        return view('user.dashboard');
-    })->name('user.dashboard');
-
-    // Melihat kamar
-    Route::get('/rooms', [UserRoomController::class, 'index'])
-        ->name('user.rooms')
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])
+        ->name('user.dashboard')
         ->middleware('auth');
 
-    // Booking
-    Route::get('/booking', [UserBookingController::class, 'index'])
-        ->name('user.booking')
-        ->middleware('auth');
+    // BOOKING KAMAR
+    Route::get('/booking', [UserBookingController::class, 'create'])
+        ->name('booking.create');
 
-    Route::post('/booking/simpan', [UserBookingController::class, 'store'])
-        ->name('user.booking.store')
-        ->middleware('auth');
+    Route::post('/booking', [UserBookingController::class, 'store'])
+        ->name('booking.store');
 
-    // Pembayaran
-    Route::get('/payments', [UserPaymentController::class, 'index'])
-        ->name('user.payments')
-        ->middleware('auth');
+    // PEMBAYARAN
+    Route::get('/payment/{booking}', [UserPaymentController::class, 'create'])
+        ->name('payment.create');
+
+    Route::post('/payment/{booking}', [UserPaymentController::class, 'store'])
+        ->name('payment.store');
+
+    // PROFIL USER
+    Route::get('/profile', [ProfileController::class, 'index'])
+        ->name('user.profile');
+
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])
+        ->name('user.profile.edit');
+
+    Route::post('/profile', [ProfileController::class, 'update'])
+        ->name('user.profile.update');
 });

@@ -10,7 +10,7 @@
 <div class="card">
     <div class="card-body">
 
-        <form action="{{ route('admin.tamu.create') }}" method="POST">
+        <form action="{{ route('tamu.create') }}" method="POST">
             @csrf
 
             <div class="form-group">

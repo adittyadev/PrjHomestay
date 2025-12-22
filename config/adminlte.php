@@ -300,106 +300,101 @@ return [
 
     'menu' => [
 
-        // Navbar items
-        [
-            'type' => 'navbar-search',
-            'text' => 'search',
-            'topnav_right' => true,
-        ],
-        [
-            'type' => 'fullscreen-widget',
-            'topnav_right' => true,
-        ],
-
-        // Sidebar Search
-        [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
+        // ===============================
+        // 🔐 ADMIN MENU
+        // ===============================
         [
             'text' => 'Dashboard',
             'url'  => 'admin/dashboard',
             'icon' => 'fas fa-tachometer-alt',
+            'can'  => 'admin',
         ],
 
-        // ===============================
-        // 📌 MASTER DATA
-        // ===============================
-        ['header' => 'MASTER DATA'],
+        ['header' => 'MASTER DATA', 'can' => 'admin'],
 
         [
             'text' => 'Data Tamu',
             'url'  => 'admin/tamu',
             'icon' => 'fas fa-user-friends',
+            'can'  => 'admin',
         ],
 
         [
             'text' => 'Data Kamar',
             'url'  => 'admin/rooms',
             'icon' => 'fas fa-bed',
+            'can'  => 'admin',
         ],
 
-        // ===============================
-        // 📌 TRANSAKSI
-        // ===============================
-        ['header' => 'TRANSAKSI'],
+        ['header' => 'TRANSAKSI', 'can' => 'admin'],
 
         [
             'text' => 'Data Booking',
             'url'  => 'admin/bookings',
             'icon' => 'fas fa-calendar-check',
+            'can'  => 'admin',
         ],
 
         [
             'text' => 'Payments',
             'url'  => 'admin/payments',
             'icon' => 'fas fa-money-bill-wave',
+            'can'  => 'admin',
         ],
 
         [
             'text' => 'Check-in',
             'url'  => 'admin/checkin',
             'icon' => 'fas fa-sign-in-alt',
+            'can'  => 'admin',
         ],
 
         [
             'text' => 'Check-out',
             'url'  => 'admin/checkout',
             'icon' => 'fas fa-sign-out-alt',
+            'can'  => 'admin',
+        ],
+        // ===============================
+        // 👤 USER MENU
+        // ===============================
+        [
+            'text' => 'Dashboard',
+            'url'  => 'user/dashboard',
+            'icon' => 'fas fa-home',
+            'can'  => 'user',
+        ],
+
+        [
+            'text' => 'Booking Kamar',
+            'url'  => 'user/booking',
+            'icon' => 'fas fa-bed',
+            'can'  => 'user',
+        ],
+
+        [
+            'text' => 'Pembayaran',
+            'url'  => 'user/dashboard',
+            'icon' => 'fas fa-credit-card',
+            'can'  => 'user',
+        ],
+
+        [
+            'text' => 'Profil Saya',
+            'url'  => 'user/profile',
+            'icon' => 'fas fa-user',
+            'can'  => 'user',
         ],
 
         // ===============================
-        // 📌 DEFAULT ADMINLTE
+        // ⚙️ AKUN
         // ===============================
-        ['header' => 'account_settings'],
+        ['header' => 'AKUN'],
 
         [
-            'text' => 'profile',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
-
-        // Labels section
-        ['header' => 'labels'],
-        [
-            'text' => 'important',
-            'icon_color' => 'red',
-            'url' => '#',
-        ],
-        [
-            'text' => 'warning',
-            'icon_color' => 'yellow',
-            'url' => '#',
-        ],
-        [
-            'text' => 'information',
-            'icon_color' => 'cyan',
-            'url' => '#',
+            'text' => 'Logout',
+            'url'  => 'logout',
+            'icon' => 'fas fa-sign-out-alt',
         ],
     ],
 

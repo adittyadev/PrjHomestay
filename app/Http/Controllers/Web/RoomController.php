@@ -43,7 +43,7 @@ class RoomController extends Controller
             'foto'        => $filename
         ]);
 
-        return redirect()->route('admin.rooms.index')->with('success', 'Kamar berhasil ditambahkan!');
+        return redirect()->route('rooms.index')->with('success', 'Kamar berhasil ditambahkan!');
     }
 
     public function edit($id)
@@ -85,7 +85,7 @@ class RoomController extends Controller
             'foto'       => $filename
         ]);
 
-        return redirect()->route('admin.rooms.index')->with('success', 'Kamar berhasil diperbarui!');
+        return redirect()->route('rooms.index')->with('success', 'Kamar berhasil diperbarui!');
     }
 
     public function destroy($id)
