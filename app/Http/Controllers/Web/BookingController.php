@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\Room;
 use App\Models\Tamu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
@@ -26,36 +27,42 @@ class BookingController extends Controller
     public function store(Request $r)
     {
         $r->validate([
-            'tamu_id' => 'required',
             'room_id' => 'required',
-            'check_in' => 'required|date',
-            'check_out' => 'required|date|after:check_in',
+            'checkin' => 'required|date',
+            'checkout' => 'required|date|after:checkin',
         ]);
+
+        $user = Auth::user();
+        $tamu = $user->tamu;
+
+        if (!$tamu) {
+            return response()->json([
+                'message' => 'Data tamu belum tersedia'
+            ], 422);
+        }
 
         $room = Room::findOrFail($r->room_id);
 
-        // Hitung total bayar
-        $hari = (strtotime($r->check_out) - strtotime($r->check_in)) / 86400;
+        $hari = (strtotime($r->checkout) - strtotime($r->checkin)) / 86400;
         if ($hari <= 0) $hari = 1;
 
         $total = $hari * $room->harga;
 
-        Booking::create([
-            'tamu_id' => $r->tamu_id,
-            'room_id' => $r->room_id,
-            'tanggal_booking' => now(),
-            'check_in' => $r->check_in,
-            'check_out' => $r->check_out,
+        $booking = Booking::create([
+            'tamu_id' => $tamu->id, // ✅ AMAN
+            'room_id' => $room->id,
+            'check_in' => $r->checkin,
+            'check_out' => $r->checkout,
             'total_bayar' => $total,
             'status_booking' => 'pending'
         ]);
 
-        // Set kamar menjadi booked
-        $room->update([
-            'status' => 'booked'
-        ]);
+        $room->update(['status' => 'booked']);
 
-        return redirect()->route('bookings.index')->with('success', 'Booking berhasil dibuat!');
+        return response()->json([
+            'message' => 'Booking berhasil',
+            'data' => $booking
+        ]);
     }
 
     public function edit($id)

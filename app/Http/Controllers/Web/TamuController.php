@@ -30,7 +30,7 @@ class tamuController extends Controller
 
         tamu::create($r->all());
 
-        return redirect()->route('admin.tamu.index')->with('success', 'Tamu berhasil ditambahkan!');
+        return redirect()->route('tamu.index')->with('success', 'Tamu berhasil ditambahkan!');
     }
 
     public function edit($id)
@@ -52,7 +52,7 @@ class tamuController extends Controller
 
         $tamu->update($r->all());
 
-        return redirect()->route('admin.tamu.index')->with('success', 'Tamu berhasil diperbarui!');
+        return redirect()->route('tamu.index')->with('success', 'Tamu berhasil diperbarui!');
     }
 
     public function destroy($id)
