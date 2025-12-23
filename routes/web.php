@@ -29,9 +29,11 @@ use App\Http\Controllers\User\ProfileController;
 
 // FORM LOGIN
 Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
+Route::get('/admin/login', [LoginController::class, 'showLogin'])->name('admin.login');
 
 // PROSES LOGIN
 Route::post('/login', [LoginController::class, 'login'])->name('login.process');
+Route::post('/admin/login', [LoginController::class, 'login'])->name('admin.login.process');
 
 // LOGOUT
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
