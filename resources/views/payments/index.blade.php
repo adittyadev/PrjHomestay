@@ -34,13 +34,15 @@
                     {{ ucfirst($p->status) }}
                 </span>
             </td>
-            <td>
-                @if($p->bukti_transfer)
-                <img src="{{ asset('storage/payments/'.$p->bukti_transfer) }}" width="70">
-                @else
-                -
-                @endif
-            </td>
+<td>
+    @if($p->bukti_transfer && file_exists(public_path('storage/'.$p->bukti_transfer)))
+        <a href="{{ asset('storage/'.$p->bukti_transfer) }}" target="_blank">
+            <img src="{{ asset('storage/'.$p->bukti_transfer) }}" width="70">
+        </a>
+    @else
+        -
+    @endif
+</td>
 <td>
 
     <!-- Tombol Status VALID -->

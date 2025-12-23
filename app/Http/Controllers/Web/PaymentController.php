@@ -9,11 +9,11 @@ use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
-    public function index()
-    {
-        $payments = Payment::with('booking')->get();
-        return view('payments.index', compact('payments'));
-    }
+public function index()
+{
+    $payments = Payment::with('booking.tamu')->paginate(10);
+    return view('payments.index', compact('payments'));
+}
 
     public function create()
     {

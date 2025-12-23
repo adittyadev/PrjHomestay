@@ -1098,14 +1098,9 @@
         {
             "name": "jeroennoten/laravel-adminlte",
             "version": "v3.15.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jeroennoten/Laravel-AdminLTE.git",
-                "reference": "606d34ad54d9f16206323f88b6767fb68e8f6064"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jeroennoten/Laravel-AdminLTE/zipball/606d34ad54d9f16206323f88b6767fb68e8f6064",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/jeroennoten/laravel-adminlte/v3.15.3/jeroennoten-laravel-adminlte-v3.15.3.zip",
                 "reference": "606d34ad54d9f16206323f88b6767fb68e8f6064",
                 "shasum": ""
             },
@@ -1131,7 +1126,6 @@
                     "JeroenNoten\\LaravelAdminLte\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
