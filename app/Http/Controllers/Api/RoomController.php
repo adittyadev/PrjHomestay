@@ -9,8 +9,9 @@ class RoomController extends Controller
 {
     public function index()
     {
+        // Tampilkan semua kamar (available dan booked)
         return response()->json(
-            Room::where('status', 'available')->get()
+            Room::all()
         );
     }
 }
