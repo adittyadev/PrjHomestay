@@ -64,7 +64,8 @@ class BookingController extends Controller
 
     public function show($id)
     {
-        $booking = Booking::where('id', $id)
+        $booking = Booking::with(['room', 'user', 'tamu']) // ✅ TAMBAHKAN INI
+            ->where('id', $id)
             ->where('user_id', Auth::id())
             ->first();
 

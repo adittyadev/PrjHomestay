@@ -7,6 +7,7 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use App\Helpers\NotificationHelper;
 
 class PaymentController extends Controller
 {
@@ -100,5 +101,25 @@ class PaymentController extends Controller
             ->get();
 
         return response()->json($payments);
+    }
+
+    // Saat admin konfirmasi pembayaran
+    public function confirmPayment($paymentId)
+    {
+        $payment = Payment::findOrFail($paymentId);
+        $booking = $payment->booking;
+
+        // Update status
+        $payment->update(['status_payment' => 'confirmed']);
+        $booking->update(['status_booking' => 'booked']);
+
+        // ✅ Kirim notifikasi
+        NotificationHelper::paymentConfirmed(
+            $booking->user_id,
+            $booking->id,
+            $payment->jumlah_bayar
+        );
+
+        return response()->json(['message' => 'Pembayaran dikonfirmasi']);
     }
 }

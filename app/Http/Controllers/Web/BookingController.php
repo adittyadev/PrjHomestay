@@ -90,4 +90,28 @@ class BookingController extends Controller
 
         return back()->with('success', 'Booking berhasil dihapus');
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $booking = Booking::findOrFail($id);
+
+        $request->validate([
+            'status_booking' => 'required|in:selesai,cancelled'
+        ]);
+
+        $booking->update([
+            'status_booking' => $request->status_booking
+        ]);
+
+        // 🔥 Jika booking selesai / cancelled → kamar jadi available lagi
+        if (in_array($request->status_booking, ['selesai', 'cancelled'])) {
+            if ($booking->room) {
+                $booking->room->update([
+                    'status' => 'available'
+                ]);
+            }
+        }
+
+        return back()->with('success', 'Status booking berhasil diperbarui');
+    }
 }

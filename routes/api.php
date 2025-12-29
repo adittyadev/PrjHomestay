@@ -7,8 +7,11 @@
     use App\Http\Controllers\Api\RoomController;
     use App\Http\Controllers\Api\BookingController;
     use App\Http\Controllers\Api\PaymentController;
-    use App\Http\Controllers\Api\ProfileController; 
+    use App\Http\Controllers\Api\ProfileController;
     use App\Http\Controllers\Api\RegisterController;
+    use App\Http\Controllers\Api\ReviewController;
+    use App\Http\Controllers\Api\ReviewReplyController;
+    use App\Http\Controllers\Api\NotificationController;
 
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [RegisterController::class, 'register']);
@@ -43,7 +46,7 @@
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/bookings', [BookingController::class, 'store']);
         Route::get('/user/bookings', [BookingController::class, 'index']);
-        Route::get('/booking/{id}', [BookingController::class, 'show']);
+        Route::get('/user/bookings/{id}', [BookingController::class, 'show']); // ✅ Ubah ini
     });
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/payments', [PaymentController::class, 'store']);
@@ -55,4 +58,21 @@
         Route::get('/profile', [ProfileController::class, 'index']);
         Route::post('/profile/update', [ProfileController::class, 'update']);
         Route::post('/logout', [ProfileController::class, 'logout']);
+    });
+
+    Route::get('/rooms/{roomId}/reviews', [ReviewController::class, 'index']);
+
+    // route butuh login
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/reviews', [ReviewController::class, 'store']);
+        Route::post('/reviews/{reviewId}/reply', [ReviewReplyController::class, 'store']);
+    });
+
+    Route::middleware('auth:sanctum')->group(function () {
+        // Notifications
+        Route::get('/notifications', [NotificationController::class, 'index']);
+        Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
+        Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+        Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+        Route::delete('/notifications/{id}', [NotificationController::class, 'destroy']);
     });

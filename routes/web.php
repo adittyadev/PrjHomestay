@@ -18,8 +18,10 @@ use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\User\BookingController as UserBookingController;
 use App\Http\Controllers\User\PaymentController as UserPaymentController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\HomeController;
 
 
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 /*
 |--------------------------------------------------------------------------
@@ -81,6 +83,8 @@ Route::prefix('admin')->group(function () {
 
     // CRUD BOOKING
     Route::resource('bookings', BookingController::class)->middleware('auth');
+    Route::post('/bookings/{id}/status', [BookingController::class, 'updateStatus'])
+        ->name('bookings.updateStatus');
 
     // PEMBAYARAN
     Route::resource('payments', PaymentController::class)->middleware('auth');
