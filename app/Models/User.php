@@ -48,6 +48,16 @@ class User extends Authenticatable
         return $this->role === 'user';
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function reviewReplies()
+    {
+        return $this->hasMany(ReviewReply::class);
+    }   
+
     /**
      * Get the attributes that should be cast.
      *

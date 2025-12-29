@@ -14,6 +14,16 @@ class ProfileController extends Controller
     {
         $user = $request->user()->load('tamu');
 
+        // Format foto URL dengan full URL
+        $tamu = $user->tamu;
+        if ($tamu && $tamu->foto) {
+            // Jika foto sudah berupa full URL, biarkan
+            if (!filter_var($tamu->foto, FILTER_VALIDATE_URL)) {
+                // Jika bukan URL, tambahkan base URL
+                $tamu->foto = url($tamu->foto);
+            }
+        }
+
         return response()->json([
             'success' => true,
             'data' => [
@@ -22,7 +32,7 @@ class ProfileController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                 ],
-                'tamu' => $user->tamu,
+                'tamu' => $tamu,
             ],
         ]);
     }
@@ -38,7 +48,7 @@ class ProfileController extends Controller
             'email' => 'required|email|unique:users,email,' . $user->id,
             'no_hp' => 'required|string|max:20',
             'alamat' => 'required|string',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // 5MB max
         ]);
 
         if ($validator->fails()) {
@@ -61,13 +71,19 @@ class ProfileController extends Controller
         // Handle foto upload
         if ($request->hasFile('foto')) {
             // Delete old foto if exists
-            if ($tamu->foto && Storage::disk('public')->exists($tamu->foto)) {
-                Storage::disk('public')->delete($tamu->foto);
+            if ($tamu->foto) {
+                // Extract path from URL if it's a full URL
+                $oldPath = str_replace(url('/storage/'), '', $tamu->foto);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
             }
 
             // Store new foto
             $path = $request->file('foto')->store('photos', 'public');
-            $tamu->foto = Storage::url($path);
+
+            // Save as full URL instead of relative path
+            $tamu->foto = url(Storage::url($path));
         }
 
         $tamu->save();

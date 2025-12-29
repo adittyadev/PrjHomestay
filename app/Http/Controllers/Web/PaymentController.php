@@ -6,14 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Models\Booking;
 use Illuminate\Http\Request;
+use App\Helpers\NotificationHelper;
 
 class PaymentController extends Controller
 {
-public function index()
-{
-    $payments = Payment::with('booking.tamu')->paginate(10);
-    return view('payments.index', compact('payments'));
-}
+    public function index()
+    {
+        $payments = Payment::with('booking.tamu')->paginate(10);
+        return view('payments.index', compact('payments'));
+    }
 
     public function create()
     {
@@ -124,15 +125,48 @@ public function index()
 
     public function updateStatus(Request $r, $id)
     {
-        $payment = Payment::findOrFail($id);
+        $payment = Payment::with('booking')->findOrFail($id);
 
         $r->validate([
             'status' => 'required|in:pending,valid,invalid'
         ]);
 
+        // Update status pembayaran
         $payment->status = $r->status;
         $payment->save();
 
-        return redirect()->route('payments.index')->with('success', 'Status pembayaran diperbarui!');
+        if ($payment->booking) {
+            // ✅ Jika pembayaran VALID
+            if ($r->status === 'valid') {
+                $payment->booking->update([
+                    'status_booking' => 'booked'
+                ]);
+
+                // 🔔 BUAT NOTIFIKASI
+                NotificationHelper::paymentConfirmed(
+                    $payment->booking->user_id,
+                    $payment->booking->id,
+                    $payment->jumlah
+                );
+            }
+
+            // ❌ Jika pembayaran INVALID
+            if ($r->status === 'invalid') {
+                $payment->booking->update([
+                    'status_booking' => 'pending'
+                ]);
+
+                // 🔔 NOTIFIKASI DITOLAK
+                NotificationHelper::paymentRejected(
+                    $payment->booking->user_id,
+                    $payment->booking->id,
+                    'Bukti pembayaran tidak valid'
+                );
+            }
+        }
+
+        return redirect()
+            ->route('payments.index')
+            ->with('success', 'Status pembayaran & booking berhasil diperbarui!');
     }
 }

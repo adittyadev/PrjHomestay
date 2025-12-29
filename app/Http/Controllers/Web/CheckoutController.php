@@ -15,7 +15,7 @@ class CheckoutController extends Controller
         // Booking yang sudah checkin tapi belum checkout
         $bookings = Booking::where('status_booking', 'checkin')->get();
 
-        return view('admin.checkout.index', compact('bookings'));
+        return view('checkouts.index', compact('bookings'));
     }
 
     // Proses checkout
