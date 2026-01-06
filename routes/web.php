@@ -149,3 +149,12 @@ Route::prefix('user')->group(function () {
     Route::post('/profile', [ProfileController::class, 'update'])
         ->name('user.profile.update');
 });
+
+Route::get('/test-wa-token', function () {
+    return env('WA_TOKEN');
+});
+Route::get('/test-wa-config', function () {
+    return config('whatsapp.token');
+});
+
+Route::get('/test-wa', [PaymentController::class, 'testWa']);
