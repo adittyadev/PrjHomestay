@@ -7,9 +7,18 @@ use App\Models\Payment;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Helpers\NotificationHelper;
+use App\Services\WhatsappService;
+use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
+    protected $whatsapp;
+
+    public function __construct(WhatsappService $whatsapp)
+    {
+        $this->whatsapp = $whatsapp;
+    }
+
     public function index()
     {
         $payments = Payment::with('booking.tamu')->paginate(10);
@@ -125,11 +134,13 @@ class PaymentController extends Controller
 
     public function updateStatus(Request $r, $id)
     {
-        $payment = Payment::with('booking')->findOrFail($id);
+        $payment = Payment::with(['booking.tamu', 'booking.room'])->findOrFail($id);
 
         $r->validate([
             'status' => 'required|in:pending,valid,invalid'
         ]);
+
+        $oldStatus = $payment->status;
 
         // Update status pembayaran
         $payment->status = $r->status;
@@ -142,31 +153,76 @@ class PaymentController extends Controller
                     'status_booking' => 'booked'
                 ]);
 
-                // 🔔 BUAT NOTIFIKASI
+                // 🔔 Notifikasi internal
                 NotificationHelper::paymentConfirmed(
                     $payment->booking->user_id,
                     $payment->booking->id,
                     $payment->jumlah
                 );
+
+                // 📲 KIRIM WHATSAPP VIA GATEWAY
+                $tamu = $payment->booking->tamu;
+                $room = $payment->booking->room;
+
+                $message = "*PEMBAYARAN BERHASIL*\n\n";
+                $message .= "Halo *{$tamu->nama}*,\n\n";
+                $message .= "Pembayaran Anda telah *DIVALIDASI*.\n\n";
+                $message .= "Kamar: {$room->nama_kamar}\n";
+                $message .= "Jumlah: Rp " . number_format($payment->jumlah, 0, ',', '.') . "\n";
+                $message .= "Status Booking: *BOOKED*\n";
+                $message .= "Silakan datang untuk melakukan *check-in* pada tanggal *"
+                    . Carbon::parse($payment->booking->check_in)->translatedFormat('d F Y')
+                    . "*.\n\n";
+                $message .= "Terima kasih 🙏";
+
+                $this->whatsapp->sendMessage($tamu->no_hp, $message);
             }
 
-            // ❌ Jika pembayaran INVALID
+
             if ($r->status === 'invalid') {
                 $payment->booking->update([
                     'status_booking' => 'pending'
                 ]);
 
-                // 🔔 NOTIFIKASI DITOLAK
                 NotificationHelper::paymentRejected(
                     $payment->booking->user_id,
                     $payment->booking->id,
                     'Bukti pembayaran tidak valid'
                 );
+
+                // 📲 KIRIM WA GATEWAY
+                $tamu = $payment->booking->tamu;
+
+                $message = "❌ *PEMBAYARAN DITOLAK*\n\n";
+                $message .= "Halo *{$tamu->nama}*,\n\n";
+                $message .= "Mohon maaf, pembayaran Anda *BELUM VALID*.\n";
+                $message .= "Silakan upload ulang bukti pembayaran yang jelas.\n\n";
+                $message .= "Terima kasih.";
+
+                $this->whatsapp->sendMessage($tamu->no_hp, $message);
             }
         }
 
         return redirect()
             ->route('payments.index')
-            ->with('success', 'Status pembayaran & booking berhasil diperbarui!');
+            ->with('success', 'Status pembayaran berhasil diperbarui!');
+    }
+
+
+
+    public function show($id)
+    {
+        $payment = Payment::with(['booking.tamu', 'booking.room'])->findOrFail($id);
+        return view('payments.show', compact('payment'));
+    }
+
+    public function testWa()
+    {
+        $this->whatsapp->sendMessage(
+            '083182117492',
+            '🔥 TEST FONNTE BERHASIL DARI LARAVEL'
+        );
+
+        return 'WA TEST DIKIRIM';
     }
 }

@@ -114,4 +114,11 @@ class BookingController extends Controller
 
         return back()->with('success', 'Status booking berhasil diperbarui');
     }
+
+    // BookingController.php
+    public function show($id)
+    {
+        $booking = Booking::with(['tamu', 'room'])->findOrFail($id);
+        return view('bookings.show', compact('booking'));
+    }
 }
